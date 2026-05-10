@@ -83,20 +83,34 @@ final class PostMetaWriter
     /**
      * Read a scalar value. Returns the raw stored shape — callers (or the
      * stagehand_get_value() helper) interpret it per field type.
+     *
+     * Resolution order:
+     *   1. `_stagehand_<field>` envelope ({ v, value })
+     *   2. `_stagehand_<field>` raw scalar (no envelope, future-proof)
+     *   3. `<field>` flat postmeta (legacy ACF storage — transparent
+     *      fallback so themes migrating off ACF keep rendering until the
+     *      data is rewritten through the editor or a migration script)
      */
     public function read_value(int $post_id, string $field_name, mixed $default = null): mixed
     {
         $stored = get_post_meta($post_id, $this->meta_key($field_name), true);
-        if (!is_array($stored)) {
-            // Pre-Stagehand or legacy postmeta — surface the raw value as-is
-            // so theme migrations off ACF (which writes flat postmeta) can
-            // read existing data without a forced rewrite.
-            return $stored === '' ? $default : $stored;
+        if (is_array($stored)) {
+            if (array_key_exists('value', $stored)) {
+                return $stored['value'];
+            }
+            // No 'value' key — array shape we don't recognise. Treat as
+            // unset and fall through to the legacy-meta read below.
+        } elseif ($stored !== '') {
+            // Pre-envelope raw scalar at the prefixed key.
+            return $stored;
         }
-        if (array_key_exists('value', $stored)) {
-            return $stored['value'];
+
+        // Legacy ACF storage — postmeta written without the _stagehand_ prefix.
+        $legacy = get_post_meta($post_id, $field_name, true);
+        if ($legacy === '' || $legacy === null) {
+            return $default;
         }
-        return $default;
+        return $legacy;
     }
 
     public function delete(int $post_id, string $field_name): void

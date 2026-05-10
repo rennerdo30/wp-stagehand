@@ -3,7 +3,7 @@
  * Plugin Name: Stagehand
  * Plugin URI: https://github.com/rennerdo30/wp-stagehand
  * Description: Field types for WordPress — repeater, flexible-content, clone (with pipe-shorthand textarea fallback), plus scalar leaf types: text, textarea, wysiwyg, email, url, date, time, color, select, image, post_object, group. MIT, ACF-free.
- * Version: 0.2.0
+ * Version: 0.3.0
  * Author: renner.dev
  * Author URI: https://renner.dev
  * License: MIT
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('STAGEHAND_VERSION', '0.2.0');
+define('STAGEHAND_VERSION', '0.3.0');
 define('STAGEHAND_FILE', __FILE__);
 define('STAGEHAND_DIR', plugin_dir_path(__FILE__));
 define('STAGEHAND_URL', plugin_dir_url(__FILE__));

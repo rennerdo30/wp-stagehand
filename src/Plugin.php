@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Stagehand;
 
+use Stagehand\Admin\SettingsPage;
 use Stagehand\Editor\MetaboxRenderer;
 use Stagehand\Storage\PostMetaWriter;
 
@@ -49,6 +50,7 @@ final class Plugin
             add_action('add_meta_boxes', [$this->renderer, 'register_metaboxes']);
             add_action('save_post', [$this->renderer, 'handle_save'], 10, 2);
             add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+            (new SettingsPage())->register();
         }
     }
 

@@ -1,0 +1,133 @@
+/* Stagehand admin field styles */
+
+.stagehand-field {
+    --sh-border: #d2d4d7;
+    --sh-bg: #fbfbfc;
+    --sh-accent: #2271b1;
+    --sh-danger: #b32d2e;
+    margin: 0 0 1rem;
+    font-size: 13px;
+}
+
+.stagehand-field .stagehand-toggle {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin: 0 0 0.75rem;
+    padding: 2px;
+    background: var(--sh-bg);
+    border: 1px solid var(--sh-border);
+    border-radius: 4px;
+}
+
+.stagehand-field .stagehand-mode {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.stagehand-field .stagehand-mode.is-active {
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--sh-border);
+    color: var(--sh-accent);
+    font-weight: 600;
+}
+
+.stagehand-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+}
+
+.stagehand-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 28px;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--sh-bg);
+    border: 1px solid var(--sh-border);
+    border-radius: 6px;
+}
+
+.stagehand-row.is-dragging {
+    opacity: 0.55;
+    border-style: dashed;
+}
+
+.stagehand-handle {
+    cursor: grab;
+    color: #8c8f94;
+    user-select: none;
+    line-height: 1;
+    padding-top: 0.5rem;
+    text-align: center;
+}
+
+.stagehand-handle:active { cursor: grabbing; }
+
+.stagehand-row-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.5rem;
+}
+
+.stagehand-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.stagehand-sub-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #50575e;
+}
+
+.stagehand-sub input[type="text"],
+.stagehand-sub textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.stagehand-remove {
+    align-self: start;
+    color: var(--sh-danger);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    padding: 0.25rem 0.5rem;
+}
+
+.stagehand-shorthand {
+    margin-top: 0.5rem;
+}
+
+.stagehand-shorthand-hint {
+    margin: 0 0 0.25rem;
+    font-size: 11px;
+    color: #50575e;
+}
+
+.stagehand-shorthand-textarea {
+    width: 100%;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.55;
+    background: #fff;
+}
+
+.stagehand-field[data-display-mode="visual"]    .stagehand-shorthand,
+.stagehand-field[data-display-mode="shorthand"] .stagehand-visual { display: none; }
+
+@media (max-width: 600px) {
+    .stagehand-row {
+        grid-template-columns: 1fr;
+    }
+    .stagehand-handle { display: none; }
+}

@@ -76,6 +76,13 @@ final class Plugin
             'switchShorthand'  => __('Switch to shorthand', 'stagehand'),
             'switchVisual'     => __('Switch to visual', 'stagehand'),
             'pasteHint'        => __('Paste pipe-shorthand here, one row per line: A | B | C', 'stagehand'),
+            'chooseImage'      => __('Choose image', 'stagehand'),
+            'useThisImage'     => __('Use this image', 'stagehand'),
         ]);
+
+        // Image fields rely on the WP media frame; loading wp_media() always
+        // is cheaper than per-screen detection (it's already cached on most
+        // edit screens via the post-thumbnail metabox).
+        wp_enqueue_media();
     }
 }

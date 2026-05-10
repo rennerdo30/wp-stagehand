@@ -14,7 +14,61 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.stagehand-field').forEach(initField);
+        document.querySelectorAll('.stagehand-scalar[data-stagehand-type="image"]').forEach(initImagePicker);
+        document.querySelectorAll('.stagehand-scalar[data-stagehand-type="color"]').forEach(initColorReadout);
     });
+
+    function initImagePicker(field) {
+        if (typeof wp === 'undefined' || !wp.media) return;
+        const idInput = field.querySelector('[data-stagehand-image-id]');
+        const preview = field.querySelector('[data-stagehand-image-preview]');
+        const pick    = field.querySelector('[data-stagehand-image-pick]');
+        const clear   = field.querySelector('[data-stagehand-image-clear]');
+        if (!idInput || !pick) return;
+
+        let frame = null;
+        pick.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (frame === null) {
+                frame = wp.media({
+                    title: (window.StagehandI18n && window.StagehandI18n.chooseImage) || 'Choose image',
+                    button: { text: (window.StagehandI18n && window.StagehandI18n.useThisImage) || 'Use this image' },
+                    multiple: false,
+                    library: { type: 'image' },
+                });
+                frame.on('select', function () {
+                    const att = frame.state().get('selection').first().toJSON();
+                    idInput.value = att.id;
+                    if (preview) {
+                        const url = (att.sizes && att.sizes.medium && att.sizes.medium.url) || att.url;
+                        preview.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = att.alt || '';
+                        preview.appendChild(img);
+                    }
+                });
+            }
+            frame.open();
+        });
+
+        if (clear) {
+            clear.addEventListener('click', function (e) {
+                e.preventDefault();
+                idInput.value = '';
+                if (preview) preview.innerHTML = '';
+            });
+        }
+    }
+
+    function initColorReadout(field) {
+        const input    = field.querySelector('input[type="color"]');
+        const readout  = field.querySelector('.stagehand-color-readout');
+        if (!input || !readout) return;
+        input.addEventListener('input', function () {
+            readout.textContent = input.value;
+        });
+    }
 
     function initField(field) {
         const visual = field.querySelector('[data-stagehand-visual]');

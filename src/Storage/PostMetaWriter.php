@@ -7,15 +7,17 @@ namespace Stagehand\Storage;
 /**
  * Postmeta serialization layer.
  *
- * Storage shape, per field:
- *   meta_key  = `_stagehand_<field_name>`
- *   meta_val  = [
- *       'v'    => 1,                       // storage version
- *       'rows' => [ row, row, row, ... ],  // each row is associative
- *   ]
+ * Two envelope shapes share the same `_stagehand_<field_name>` meta key
+ * space — the writer picks one based on the field type:
  *
- * We wrap the rows in an envelope so future versions can migrate without
- * mistaking legacy raw arrays for the new shape.
+ *   Container (repeater / flexible_content / clone):
+ *     [ 'v' => 1, 'rows' => [ row, row, … ] ]
+ *
+ *   Scalar (text, image, url, post_object, group, …):
+ *     [ 'v' => 1, 'value' => <mixed> ]
+ *
+ * Readers check key presence (`rows` vs `value`) to disambiguate, so
+ * envelope shapes can coexist in the same install during migrations.
  */
 final class PostMetaWriter
 {
@@ -57,6 +59,44 @@ final class PostMetaWriter
             return $value;
         }
         return [];
+    }
+
+    /**
+     * Persist a scalar value (single field, no row collection).
+     *
+     * Empty strings and nulls delete the meta key entirely so unset fields
+     * round-trip cleanly through migrations.
+     */
+    public function save_value(int $post_id, string $field_name, mixed $value): void
+    {
+        if ($value === null || $value === '' || $value === []) {
+            $this->delete($post_id, $field_name);
+            return;
+        }
+        $envelope = [
+            'v'     => self::STORAGE_VERSION,
+            'value' => $value,
+        ];
+        update_post_meta($post_id, $this->meta_key($field_name), $envelope);
+    }
+
+    /**
+     * Read a scalar value. Returns the raw stored shape — callers (or the
+     * stagehand_get_value() helper) interpret it per field type.
+     */
+    public function read_value(int $post_id, string $field_name, mixed $default = null): mixed
+    {
+        $stored = get_post_meta($post_id, $this->meta_key($field_name), true);
+        if (!is_array($stored)) {
+            // Pre-Stagehand or legacy postmeta — surface the raw value as-is
+            // so theme migrations off ACF (which writes flat postmeta) can
+            // read existing data without a forced rewrite.
+            return $stored === '' ? $default : $stored;
+        }
+        if (array_key_exists('value', $stored)) {
+            return $stored['value'];
+        }
+        return $default;
     }
 
     public function delete(int $post_id, string $field_name): void

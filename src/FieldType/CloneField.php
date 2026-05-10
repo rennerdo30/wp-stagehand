@@ -7,8 +7,8 @@ namespace Stagehand\FieldType;
 /**
  * Clone field type — references another field's sub_fields by name.
  *
- * `Clone` is a reserved keyword in PHP; the file is named Clone.php but the
- * class is exposed as `CloneField` to keep `use` statements legal.
+ * `Clone` is a reserved keyword in PHP, so the class is exposed as
+ * `CloneField`. The file matches the class name for PSR-4 autoload.
  *
  * Usage:
  *   stagehand_register_field('contact_block', [

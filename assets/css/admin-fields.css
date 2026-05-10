@@ -131,3 +131,72 @@
     }
     .stagehand-handle { display: none; }
 }
+
+/* ── Scalar field types (text, image, color, group, post_object, …) ── */
+
+.stagehand-scalar { padding: 0.25rem 0; }
+
+.stagehand-scalar input[type="text"],
+.stagehand-scalar input[type="email"],
+.stagehand-scalar input[type="url"],
+.stagehand-scalar input[type="date"],
+.stagehand-scalar input[type="time"],
+.stagehand-scalar select,
+.stagehand-scalar textarea {
+    max-width: 32rem;
+}
+
+.stagehand-scalar textarea { width: 100%; }
+
+.stagehand-scalar select.stagehand-multiselect {
+    max-width: 32rem;
+    min-height: 9rem;
+}
+
+.stagehand-color {
+    width: 3rem;
+    height: 2rem;
+    padding: 0;
+    border: 1px solid #c3c4c7;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.stagehand-color-readout {
+    margin-left: 0.5rem;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #50575e;
+}
+
+.stagehand-image-preview {
+    margin: 0.5rem 0;
+    min-height: 1.5rem;
+}
+
+.stagehand-image-preview img {
+    max-width: 240px;
+    max-height: 180px;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+.stagehand-group {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    background: #f6f7f7;
+}
+
+.stagehand-group .stagehand-sub {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.stagehand-group .stagehand-sub-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1d2327;
+}

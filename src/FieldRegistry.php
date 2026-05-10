@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Stagehand;
 
+use Stagehand\FieldType\Types;
+
 /**
  * Global, in-memory field-definition store.
  *
@@ -21,16 +23,35 @@ final class FieldRegistry
      */
     public function register(string $name, array $definition): void
     {
-        $definition['name']         = $name;
-        $definition['type']         = $definition['type']         ?? 'repeater';
-        $definition['label']        = $definition['label']        ?? $name;
-        $definition['post_types']   = $definition['post_types']   ?? [];
-        $definition['sub_fields']   = $definition['sub_fields']   ?? [];
-        $definition['layouts']      = $definition['layouts']      ?? [];
-        $definition['min_rows']     = $definition['min_rows']     ?? 0;
-        $definition['max_rows']     = $definition['max_rows']     ?? null;
-        $definition['display_mode'] = $definition['display_mode'] ?? 'both';
-        $definition['clone_of']     = $definition['clone_of']     ?? null;
+        $definition['name']       = $name;
+        $definition['type']       = $definition['type']       ?? 'repeater';
+        $definition['label']      = $definition['label']      ?? $name;
+        $definition['post_types'] = $definition['post_types'] ?? [];
+
+        if (Types::isContainer($definition['type'])) {
+            // Repeater / flexible_content / clone bookkeeping.
+            $definition['sub_fields']   = $definition['sub_fields']   ?? [];
+            $definition['layouts']      = $definition['layouts']      ?? [];
+            $definition['min_rows']     = $definition['min_rows']     ?? 0;
+            $definition['max_rows']     = $definition['max_rows']     ?? null;
+            $definition['display_mode'] = $definition['display_mode'] ?? 'both';
+            $definition['clone_of']     = $definition['clone_of']     ?? null;
+        } else {
+            // Scalar — only a small set of optional keys is meaningful.
+            // We don't unset unknown keys: themes may register custom
+            // metadata for downstream consumers, and discarding it would
+            // be hostile.
+            $definition['options']        = $definition['options']        ?? [];
+            $definition['return']         = $definition['return']         ?? 'value';
+            $definition['post_type']      = $definition['post_type']      ?? null;
+            $definition['multiple']       = $definition['multiple']       ?? false;
+            $definition['choices']        = $definition['choices']        ?? null;
+            $definition['placeholder']    = $definition['placeholder']    ?? '';
+            // group needs sub_fields too — single instance, flat assoc value
+            if ($definition['type'] === 'group') {
+                $definition['sub_fields'] = $definition['sub_fields'] ?? [];
+            }
+        }
 
         $this->fields[$name] = $definition;
     }

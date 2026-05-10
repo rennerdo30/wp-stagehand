@@ -198,6 +198,12 @@ final class MetaboxRenderer
                 $candidates = get_posts($args);
 
                 $select_name = $multiple ? $input_name . '[]' : $input_name;
+                $total       = count($candidates);
+
+                echo '<div class="stagehand-postobject-wrap" data-stagehand-postobject>';
+                echo '<input type="text" class="stagehand-postobject-search" data-stagehand-postobject-search'
+                    . ' placeholder="' . esc_attr__('Search…', 'stagehand') . '"'
+                    . ' aria-label="' . esc_attr__('Filter options', 'stagehand') . '" />';
                 echo '<select name="' . esc_attr($select_name) . '"' . ($multiple ? ' multiple size="8" class="stagehand-multiselect"' : '') . '>';
                 if (!$multiple) {
                     echo '<option value="">' . esc_html__('— none —', 'stagehand') . '</option>';
@@ -208,6 +214,13 @@ final class MetaboxRenderer
                         . esc_html(get_the_title($candidate)) . '</option>';
                 }
                 echo '</select>';
+                echo '<p class="stagehand-postobject-count" data-stagehand-postobject-count>'
+                    . esc_html(sprintf(
+                        /* translators: %d: number of options visible after filtering. */
+                        _n('%d result', '%d results', $total, 'stagehand'),
+                        $total
+                    )) . '</p>';
+                echo '</div>';
                 break;
 
             case 'group':

@@ -153,6 +153,46 @@
     min-height: 9rem;
 }
 
+/* post_object — searchable multiselect wrapper */
+.stagehand-postobject-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-width: 32rem;
+}
+
+.stagehand-postobject-wrap select {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.stagehand-postobject-search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.4rem 0.55rem;
+    font-size: 13px;
+    line-height: 1.4;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    background: #fff;
+    color: #1d2327;
+}
+
+.stagehand-postobject-search:focus {
+    border-color: var(--sh-accent, #2271b1);
+    box-shadow: 0 0 0 1px var(--sh-accent, #2271b1);
+    outline: 2px solid transparent;
+}
+
+.stagehand-postobject-count {
+    margin: 0;
+    font-size: 11px;
+    color: #50575e;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: 0.04em;
+}
+
 .stagehand-color {
     width: 3rem;
     height: 2rem;

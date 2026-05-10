@@ -16,7 +16,52 @@
         document.querySelectorAll('.stagehand-field').forEach(initField);
         document.querySelectorAll('.stagehand-scalar[data-stagehand-type="image"]').forEach(initImagePicker);
         document.querySelectorAll('.stagehand-scalar[data-stagehand-type="color"]').forEach(initColorReadout);
+        document.querySelectorAll('[data-stagehand-postobject]').forEach(initPostObjectSearch);
     });
+
+    /**
+     * Wire a post_object field so a sibling text input filters its <select>
+     * options by case-insensitive substring of each option's textContent.
+     *
+     * Selection state is preserved because options stay in the DOM — we only
+     * toggle their `hidden` attribute, so submitted values, the multi-select
+     * `name="…[]"` shape, and any pre-existing `selected` flags all survive
+     * untouched. No AJAX, works entirely client-side.
+     */
+    function initPostObjectSearch(wrap) {
+        const input  = wrap.querySelector('[data-stagehand-postobject-search]');
+        const select = wrap.querySelector('select');
+        const count  = wrap.querySelector('[data-stagehand-postobject-count]');
+        if (!input || !select) return;
+
+        const options = Array.from(select.options);
+        const total   = options.length;
+        const tpl = (count && count.textContent) ? count.textContent : '';
+
+        function renderCount(visible) {
+            if (!count) return;
+            // Replace the leading integer in the template label with the
+            // current visible count, e.g. "48 results" → "5 results".
+            if (/^\d+/.test(tpl)) {
+                count.textContent = tpl.replace(/^\d+/, String(visible));
+            } else {
+                count.textContent = visible + ' / ' + total;
+            }
+        }
+
+        input.addEventListener('input', function () {
+            const q = input.value.trim().toLowerCase();
+            let visible = 0;
+            options.forEach(function (opt) {
+                // Always keep an empty-value placeholder ("— none —") visible.
+                if (opt.value === '') { opt.hidden = false; visible++; return; }
+                const match = q === '' || opt.textContent.toLowerCase().indexOf(q) !== -1;
+                opt.hidden = !match;
+                if (match) visible++;
+            });
+            renderCount(visible);
+        });
+    }
 
     function initImagePicker(field) {
         if (typeof wp === 'undefined' || !wp.media) return;

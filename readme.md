@@ -68,7 +68,7 @@ Stagehand         →  MIT, drag UI + paste textarea, standalone
 
 ```bash
 # zip-install or:
-git clone https://github.com/rennerdo30/stagehand wp-content/plugins/stagehand
+git clone https://github.com/rennerdo30/wp-stagehand wp-content/plugins/stagehand
 ```
 
 Activate, then in `functions.php`:

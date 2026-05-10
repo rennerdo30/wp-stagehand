@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/rennerdo30/wp-stagehand
  * Description: Repeater, flexible-content, and clone field types for WordPress — with a pipe-shorthand textarea as a paste-friendly fallback. MIT, ACF-free.
  * Version: 0.1.0
- * Author: Renner
+ * Author: renner.dev
  * Author URI: https://renner.dev
  * License: MIT
  * License URI: https://opensource.org/licenses/MIT

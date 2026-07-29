@@ -74,6 +74,9 @@ Stagehand         →  MIT, drag UI + paste textarea + scalar leaf types,
 
 ## Quick start
 
+Requires WordPress 6.5+ and PHP 8.1+. No build step and no runtime Composer
+dependencies — Composer is only used for the test suite.
+
 ```bash
 # zip-install or:
 git clone https://github.com/rennerdo30/wp-stagehand wp-content/plugins/stagehand
@@ -226,11 +229,22 @@ stagehand_get_field(string $name): ?array
 stagehand_parse_shorthand(string $text, array $sub_fields): array
 ```
 
-Hook for registering fields:
+Hook for registering fields — the `FieldRegistry` instance is passed as the
+first argument, so you can either call the procedural helper or talk to the
+registry directly:
 
 ```php
-do_action('stagehand_register_fields');
+do_action('stagehand_register_fields', $registry);
 ```
+
+## Admin overview screen
+
+Stagehand adds a read-only top-level **Stagehand** menu in wp-admin
+(`manage_options` only). It reports the plugin version, how many fields are
+registered, the container/scalar split, which field types are in use, and which
+post types they attach to — plus a table of every registered field with its
+type, label, and sub-field count. There is nothing to configure there; field
+definitions live in code.
 
 ---
 
